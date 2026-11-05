@@ -1,0 +1,26 @@
+# Variables de entorno con credenciales
+.env
+.env.*
+!.env.example
+
+# Registros y archivos temporales
+logs/
+*.log
+tmp/
+*.tmp
+*.bak
+
+# Respaldos locales de la base de datos
+backups/
+*.sql.gz
+
+# Documentos: el único Markdown del repositorio es el README
+*.md
+!README.md
+
+# Editores y sistema operativo
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

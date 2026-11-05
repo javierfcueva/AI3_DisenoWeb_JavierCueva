@@ -1,0 +1,6 @@
+# Sin listado de carpetas
+Options -Indexes
+
+# Bloquea archivos y carpetas ocultos, entre ellos .env y .git
+RewriteEngine On
+RewriteRule (^|/)\. - [F]
