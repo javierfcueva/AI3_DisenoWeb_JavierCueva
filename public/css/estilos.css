@@ -1,0 +1,215 @@
+/* Registro de auditorías
+   1. Variables y tema
+   2. Base
+   3. Plantilla
+   4. Componentes
+   -------------------------------------------------------------------------- */
+
+/* 1. Variables y tema: light-dark(claro, oscuro). Lo decide color-scheme. */
+:root {
+    --fondo: light-dark(#f6f4ef, #0f1012);
+    --superficie: light-dark(#ffffff, #16181b);
+    --texto: light-dark(#18181a, #ece8e1);
+    --apagado: light-dark(#6b665e, #a19b91);
+    --linea: light-dark(#dedad2, #2a2d31);
+    --acento: light-dark(#7f6024, #d2b07a);
+
+    --fuente: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --fuente-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+    --espacio: 1rem;
+    --radio: 0.5rem;
+    --ancho: 72rem;
+    --margen: clamp(1rem, 4vw, 2rem);
+
+    color-scheme: light dark;
+}
+
+:root[data-tema="claro"] {
+    color-scheme: light;
+}
+
+:root[data-tema="oscuro"] {
+    color-scheme: dark;
+}
+
+/* 2. Base */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100dvh;
+    margin: 0;
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: var(--fuente);
+    line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+h1 {
+    margin: 0 0 var(--espacio);
+    font-size: clamp(2rem, 1.3rem + 3vw, 3.25rem);
+    letter-spacing: -0.02em;
+}
+
+h2 {
+    margin: 0 0 calc(var(--espacio) * 1.5);
+    font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+}
+
+h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+a {
+    color: var(--acento);
+}
+
+:focus-visible {
+    outline: 2px solid var(--acento);
+    outline-offset: 2px;
+}
+
+/* 3. Plantilla */
+.contenedor {
+    width: 100%;
+    max-width: var(--ancho);
+    margin-inline: auto;
+    padding-inline: var(--margen);
+}
+
+.saltar {
+    position: absolute;
+    top: -4rem;
+    left: var(--margen);
+    z-index: 1;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radio);
+    background: var(--superficie);
+}
+
+.saltar:focus {
+    top: 0.5rem;
+}
+
+.encabezado {
+    border-bottom: 1px solid var(--linea);
+    background: var(--superficie);
+}
+
+.encabezado__fila {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem var(--espacio);
+    padding-block: 0.875rem;
+}
+
+.marca {
+    color: var(--texto);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.principal {
+    padding-block: clamp(2rem, 6vw, 4rem);
+}
+
+.pie {
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--linea);
+    color: var(--apagado);
+    font-size: 0.875rem;
+}
+
+/* 4. Componentes */
+.boton {
+    display: inline-block;
+    padding: 0.4rem 0.875rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    background: transparent;
+    color: var(--texto);
+    font: inherit;
+    font-size: 0.875rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.boton:hover {
+    border-color: var(--acento);
+    color: var(--acento);
+}
+
+.boton[hidden] {
+    display: none;
+}
+
+.portada {
+    max-width: 44rem;
+    margin-bottom: clamp(2.5rem, 7vw, 4.5rem);
+}
+
+.antetitulo {
+    margin: 0 0 0.75rem;
+    color: var(--acento);
+    font-family: var(--fuente-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.entradilla {
+    margin: 0;
+    color: var(--apagado);
+    font-size: 1.125rem;
+}
+
+.tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: var(--espacio);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tarjeta {
+    padding: 1.25rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    background: var(--superficie);
+}
+
+.tarjeta p {
+    margin: 0;
+    color: var(--apagado);
+    font-size: 0.9375rem;
+}
+
+.tarjeta .tarjeta__valor {
+    margin-block: 0.25rem 0.5rem;
+    color: var(--acento);
+    font-family: var(--fuente-mono);
+    font-size: 1.5rem;
+}
+
+.nota {
+    margin: var(--espacio) 0 0;
+    color: var(--apagado);
+    font-size: 0.875rem;
+}

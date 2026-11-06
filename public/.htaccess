@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Las reglas de la carpeta raíz no se heredan aquí: se repite este bloqueo
+RewriteRule (^|/)\. - [F]
+
+# Lo que no sea un archivo existente pasa por el controlador frontal
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]

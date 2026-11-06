@@ -1,6 +1,14 @@
 # Sin listado de carpetas
 Options -Indexes
 
-# Bloquea archivos y carpetas ocultos, entre ellos .env y .git
 RewriteEngine On
+
+# Bloquea archivos y carpetas ocultos, entre ellos .env y .git
 RewriteRule (^|/)\. - [F]
+
+# Bloquea el código, la configuración y los scripts de la base de datos
+RewriteRule ^(app|config|database)(/|$) - [F,NC]
+
+# Solo public/ es accesible: el resto de las peticiones se dirige ahí
+RewriteRule ^public/ - [L]
+RewriteRule ^(.*)$ public/$1 [L]
