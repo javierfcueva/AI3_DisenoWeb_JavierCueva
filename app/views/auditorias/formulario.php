@@ -15,10 +15,6 @@ $esClienteNuevo = $valores['cliente_id'] === 'nuevo';
 <section class="formulario-pagina">
     <h1>Nueva auditoría</h1>
 
-    <?php if ($aviso !== null): ?>
-        <p class="alerta alerta--exito" role="status"><?= e($aviso) ?></p>
-    <?php endif; ?>
-
     <?php if ($errores !== []): ?>
         <p class="alerta alerta--error" role="alert">Revisa los campos marcados: la auditoría no se guardó.</p>
     <?php endif; ?>

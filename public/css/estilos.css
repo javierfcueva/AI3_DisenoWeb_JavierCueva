@@ -347,3 +347,155 @@ a {
     color: var(--error);
     font-size: 0.875rem;
 }
+
+/* Listado de auditorías */
+.cabecera-pagina {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio);
+    margin-bottom: 1.5rem;
+}
+
+.cabecera-pagina h1 {
+    margin: 0;
+}
+
+.vacio {
+    margin: 0;
+    padding: 1.25rem;
+    border: 1px dashed var(--linea);
+    border-radius: var(--radio);
+    color: var(--apagado);
+}
+
+.solo-lectores {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.tabla-contenedor {
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    background: var(--superficie);
+}
+
+/* Anchos fijos: un valor largo o unas notas abiertas no deforman las demás columnas. */
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    table-layout: fixed;
+}
+
+.tabla thead th:nth-child(1) { width: 3.5rem; }
+.tabla thead th:nth-child(4) { width: 5.5rem; }
+.tabla thead th:nth-child(5) { width: 6rem; }
+.tabla thead th:nth-child(6) { width: 4.5rem; }
+.tabla thead th:nth-child(7) { width: 6rem; }
+.tabla thead th:nth-child(8) { width: 10rem; }
+.tabla thead th:nth-child(9) { width: 6.5rem; }
+
+.tabla th,
+.tabla td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--linea);
+    overflow-wrap: anywhere;
+    text-align: start;
+    vertical-align: top;
+}
+
+.tabla thead th {
+    color: var(--apagado);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tabla tbody tr:last-child > * {
+    border-bottom: 0;
+}
+
+.tabla .tabla__numero {
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    white-space: nowrap;
+}
+
+.tabla__secundario {
+    display: block;
+    color: var(--apagado);
+    font-size: 0.8125rem;
+}
+
+.tabla__url {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.notas summary {
+    color: var(--acento);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.notas p {
+    max-height: 12rem;
+    margin: 0.5rem 0 0;
+    overflow-y: auto;
+    white-space: pre-line;
+}
+
+/* En pantallas angostas cada fila pasa a ser una tarjeta con sus etiquetas. */
+@media (max-width: 70rem) {
+    .tabla-contenedor {
+        border: 0;
+        background: none;
+    }
+
+    .tabla thead {
+        display: none;
+    }
+
+    .tabla,
+    .tabla tbody,
+    .tabla tr {
+        display: block;
+    }
+
+    .tabla tr {
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--linea);
+        border-radius: var(--radio);
+        background: var(--superficie);
+    }
+
+    .tabla tr + tr {
+        margin-top: var(--espacio);
+    }
+
+    .tabla th,
+    .tabla td,
+    .tabla .tabla__numero {
+        display: grid;
+        grid-template-columns: 5.5rem minmax(0, 1fr);
+        gap: 0.5rem;
+        padding: 0.25rem 0;
+        border-bottom: 0;
+        font-weight: 400;
+        text-align: start;
+        white-space: normal;
+    }
+
+    .tabla [data-etiqueta]::before {
+        color: var(--apagado);
+        content: attr(data-etiqueta);
+    }
+}

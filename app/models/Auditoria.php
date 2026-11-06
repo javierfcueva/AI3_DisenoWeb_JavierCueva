@@ -9,6 +9,25 @@ final class Auditoria
     }
 
     /**
+     * Devuelve las auditorías con su cliente, de la más reciente a la más antigua.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function listar(): array
+    {
+        $consulta = $this->conexion->prepare(
+            'SELECT a.id, c.nombre AS cliente, c.sector, a.url, a.lcp_segundos, a.inp_ms,
+                    a.cls, a.checks_aprobados, a.notas, a.fecha_creacion
+             FROM auditorias AS a
+             INNER JOIN clientes AS c ON c.id = a.cliente_id
+             ORDER BY a.fecha_creacion DESC, a.id DESC'
+        );
+        $consulta->execute();
+
+        return $consulta->fetchAll();
+    }
+
+    /**
      * Registra una auditoría y devuelve su identificador.
      *
      * @param array<string, string> $datos Valores ya validados.

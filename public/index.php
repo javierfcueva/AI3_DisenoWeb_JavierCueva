@@ -57,6 +57,7 @@ header("Content-Security-Policy: default-src 'self'; base-uri 'none'; form-actio
 
 $enrutador = new Enrutador();
 $enrutador->get('/', [InicioController::class, 'index']);
+$enrutador->get('/auditorias', [AuditoriaController::class, 'listar']);
 $enrutador->get('/auditorias/nueva', [AuditoriaController::class, 'nueva']);
 $enrutador->post('/auditorias/nueva', [AuditoriaController::class, 'guardar']);
 

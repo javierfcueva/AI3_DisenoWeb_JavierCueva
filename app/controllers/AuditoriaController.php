@@ -7,6 +7,16 @@ final class AuditoriaController
     private const ERROR_DUPLICADO = 1062;
     private const ERROR_CLIENTE_INEXISTENTE = 1452;
 
+    public function listar(): void
+    {
+        renderizar('auditorias/listado', [
+            'titulo' => 'Auditorías',
+            'seccion' => 'listado',
+            'auditorias' => (new Auditoria(obtenerConexion()))->listar(),
+            'aviso' => tomarAviso(),
+        ]);
+    }
+
     public function nueva(): void
     {
         $this->mostrarFormulario(ValidadorAuditoria::valoresVacios(), [], 200);
@@ -33,7 +43,7 @@ final class AuditoriaController
         }
 
         guardarAviso("Auditoría número {$id} registrada correctamente.");
-        redirigir('/auditorias/nueva');
+        redirigir('/auditorias');
     }
 
     /**
@@ -96,7 +106,6 @@ final class AuditoriaController
             'valores' => $valores,
             'errores' => $errores,
             'token' => tokenCsrf(),
-            'aviso' => tomarAviso(),
         ], $estado);
     }
 }

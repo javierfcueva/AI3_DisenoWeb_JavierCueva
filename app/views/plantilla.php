@@ -17,6 +17,7 @@
         <div class="contenedor encabezado__fila">
             <a class="marca" href="<?= e(url('/')) ?>">Registro de auditorías</a>
             <nav class="navegacion" aria-label="Principal">
+                <a href="<?= e(url('/auditorias')) ?>" <?= ($seccion ?? '') === 'listado' ? 'aria-current="page"' : '' ?>>Auditorías</a>
                 <a href="<?= e(url('/auditorias/nueva')) ?>" <?= ($seccion ?? '') === 'nueva' ? 'aria-current="page"' : '' ?>>Nueva auditoría</a>
                 <button class="boton" type="button" data-cambiar-tema hidden>Cambiar tema</button>
             </nav>

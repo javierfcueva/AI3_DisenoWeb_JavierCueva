@@ -11,6 +11,31 @@ function e(string|int|float|null $valor): string
 }
 
 /**
+ * Da formato a un número con coma decimal y punto de miles.
+ */
+function numero(string|int|float $valor, int $decimales = 0): string
+{
+    return number_format((float) $valor, $decimales, ',', '.');
+}
+
+/**
+ * Convierte una fecha de la base de datos a día/mes/año y hora.
+ */
+function fechaLegible(string $fecha): string
+{
+    return (new DateTimeImmutable($fecha))->format('d/m/Y H:i');
+}
+
+/**
+ * Indica si una URL se puede usar como enlace. Evita que un valor como javascript:
+ * llegue a un href aunque se haya insertado sin pasar por el formulario.
+ */
+function esEnlaceWeb(string $url): bool
+{
+    return preg_match('#^https?://#i', $url) === 1;
+}
+
+/**
  * Devuelve la carpeta del proyecto dentro del servidor, sin barra final.
  * Permite instalarlo en cualquier carpeta sin cambiar los enlaces.
  */
