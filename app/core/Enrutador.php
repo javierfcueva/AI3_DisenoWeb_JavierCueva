@@ -18,6 +18,14 @@ final class Enrutador
         $this->rutas[$ruta]['GET'] = $accion;
     }
 
+    /**
+     * @param array{class-string, string} $accion
+     */
+    public function post(string $ruta, array $accion): void
+    {
+        $this->rutas[$ruta]['POST'] = $accion;
+    }
+
     public function despachar(string $metodo, string $uri): void
     {
         $metodos = $this->rutas[$this->obtenerRuta($uri)] ?? null;

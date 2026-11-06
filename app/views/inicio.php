@@ -5,6 +5,7 @@
         Cada auditoría guarda las métricas Core Web Vitals de una página y el resultado de su
         checklist de calidad, para saber qué páginas cumplen y cuáles necesitan trabajo.
     </p>
+    <p class="portada__accion"><a class="boton boton--primario" href="<?= e(url('/auditorias/nueva')) ?>">Registrar una auditoría</a></p>
 </section>
 
 <section aria-labelledby="titulo-metricas">

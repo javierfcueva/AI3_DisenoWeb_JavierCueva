@@ -12,7 +12,9 @@ ini_set('log_errors', '1');
 
 define('RAIZ', dirname(__DIR__));
 
+require RAIZ . '/config/conexion.php';
 require RAIZ . '/app/core/helpers.php';
+require RAIZ . '/app/core/sesion.php';
 require RAIZ . '/app/core/Enrutador.php';
 
 spl_autoload_register(static function (string $clase): void {
@@ -55,5 +57,7 @@ header("Content-Security-Policy: default-src 'self'; base-uri 'none'; form-actio
 
 $enrutador = new Enrutador();
 $enrutador->get('/', [InicioController::class, 'index']);
+$enrutador->get('/auditorias/nueva', [AuditoriaController::class, 'nueva']);
+$enrutador->post('/auditorias/nueva', [AuditoriaController::class, 'guardar']);
 
 $enrutador->despachar($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

@@ -28,6 +28,15 @@ function url(string $ruta = '/'): string
 }
 
 /**
+ * Redirige con GET, de modo que recargar la página no repita el envío de un formulario.
+ */
+function redirigir(string $ruta): never
+{
+    header('Location: ' . url($ruta), true, 303);
+    exit;
+}
+
+/**
  * Muestra una vista dentro de la plantilla general.
  *
  * @param array<string, mixed> $datos Variables disponibles en la vista.
@@ -50,6 +59,7 @@ function renderizar(string $vista, array $datos = [], int $estado = 200): void
 function renderizarError(int $estado): void
 {
     $errores = [
+        403 => ['Solicitud rechazada', 'La sesión expiró o el formulario no es válido. Vuelve a abrirlo e inténtalo de nuevo.'],
         404 => ['Página no encontrada', 'La dirección solicitada no existe.'],
         405 => ['Método no permitido', 'Esta dirección no admite ese tipo de petición.'],
         500 => ['Error inesperado', 'No se pudo completar la solicitud. Inténtalo de nuevo más tarde.'],
