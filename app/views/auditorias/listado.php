@@ -25,6 +25,7 @@
                         <th scope="col" class="tabla__numero">Checklist</th>
                         <th scope="col">Notas</th>
                         <th scope="col">Fecha</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,11 +59,36 @@
                                     </details>
                                 <?php endif; ?>
                             </td>
-                            <td data-etiqueta="Fecha"><?= e(fechaLegible($auditoria['fecha_creacion'])) ?></td>
+                            <td data-etiqueta="Fecha">
+                                <div>
+                                    <?= e(fechaLegible($auditoria['fecha_creacion'])) ?>
+                                    <?php if ($auditoria['fecha_actualizacion'] !== $auditoria['fecha_creacion']): ?>
+                                        <span class="tabla__secundario">Editada <?= e(fechaLegible($auditoria['fecha_actualizacion'])) ?></span>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
+                            <td data-etiqueta="Acciones">
+                                <div class="acciones">
+                                    <a class="boton boton--pequeno" href="<?= e(url('/auditorias/editar?id=' . $auditoria['id'])) ?>">
+                                        Editar<span class="solo-lectores"> la auditoría número <?= e($auditoria['id']) ?></span>
+                                    </a>
+                                    <?php // Con JavaScript, confirmar.js pide confirmación; sin él, el formulario se envía igual. ?>
+                                    <form method="post" action="<?= e(url('/auditorias/eliminar')) ?>"
+                                          data-confirmar="¿Eliminar la auditoría número <?= e($auditoria['id']) ?>? Esta acción no se puede deshacer.">
+                                        <input type="hidden" name="csrf" value="<?= e($token) ?>">
+                                        <input type="hidden" name="id" value="<?= e($auditoria['id']) ?>">
+                                        <button class="boton boton--pequeno boton--peligro" type="submit">
+                                            Eliminar<span class="solo-lectores"> la auditoría número <?= e($auditoria['id']) ?></span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
+
+        <script src="<?= e(url('/js/confirmar.js')) ?>" defer></script>
     <?php endif; ?>
 </section>

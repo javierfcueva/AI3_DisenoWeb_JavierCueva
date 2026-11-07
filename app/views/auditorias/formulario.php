@@ -11,16 +11,24 @@ $mensajeError = static fn (string $campo): string => isset($errores[$campo])
 
 $esClienteNuevo = $valores['cliente_id'] === 'nuevo';
 
+// El mismo formulario sirve para registrar ($id null) y para editar una auditoría.
+$esEdicion = $id !== null;
+
 ?>
 <section class="formulario-pagina">
-    <h1>Nueva auditoría</h1>
+    <h1><?= $esEdicion ? 'Editar auditoría número ' . e($id) : 'Nueva auditoría' ?></h1>
 
     <?php if ($errores !== []): ?>
-        <p class="alerta alerta--error" role="alert">Revisa los campos marcados: la auditoría no se guardó.</p>
+        <p class="alerta alerta--error" role="alert">
+            Revisa los campos marcados: <?= $esEdicion ? 'los cambios no se guardaron.' : 'la auditoría no se guardó.' ?>
+        </p>
     <?php endif; ?>
 
-    <form class="formulario" method="post" action="<?= e(url('/auditorias/nueva')) ?>" data-formulario-auditoria>
+    <form class="formulario" method="post" action="<?= e(url($esEdicion ? '/auditorias/editar' : '/auditorias/nueva')) ?>" data-formulario-auditoria>
         <input type="hidden" name="csrf" value="<?= e($token) ?>">
+        <?php if ($esEdicion): ?>
+            <input type="hidden" name="id" value="<?= e($id) ?>">
+        <?php endif; ?>
 
         <fieldset class="grupo">
             <legend>Cliente</legend>
@@ -108,7 +116,12 @@ $esClienteNuevo = $valores['cliente_id'] === 'nuevo';
             </div>
         </fieldset>
 
-        <button class="boton boton--primario" type="submit">Guardar auditoría</button>
+        <div class="formulario__acciones">
+            <button class="boton boton--primario" type="submit"><?= $esEdicion ? 'Guardar cambios' : 'Guardar auditoría' ?></button>
+            <?php if ($esEdicion): ?>
+                <a class="boton" href="<?= e(url('/auditorias')) ?>">Cancelar</a>
+            <?php endif; ?>
+        </div>
     </form>
 </section>
 

@@ -33,6 +33,19 @@ final class ValidadorAuditoria
     }
 
     /**
+     * Convierte en número un identificador recibido en la URL o en un formulario.
+     * Devuelve null si no es un entero positivo dentro del rango de INT UNSIGNED.
+     */
+    public static function identificador(mixed $valor): ?int
+    {
+        if (!is_string($valor) || preg_match('/^[1-9]\d{0,9}$/', $valor) !== 1 || (int) $valor > self::ID_MAXIMO) {
+            return null;
+        }
+
+        return (int) $valor;
+    }
+
+    /**
      * @param array<string, mixed> $entrada
      * @return array{valores: array<string, string>, errores: array<string, string>}
      */
@@ -114,7 +127,7 @@ final class ValidadorAuditoria
             return;
         }
 
-        if (preg_match('/^[1-9]\d{0,9}$/', $id) !== 1 || (int) $id > self::ID_MAXIMO) {
+        if (self::identificador($id) === null) {
             $this->agregarError('cliente_id', 'Selecciona un cliente de la lista o crea uno nuevo.');
         }
     }

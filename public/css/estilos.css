@@ -200,6 +200,21 @@ a {
     cursor: wait;
 }
 
+.boton--pequeno {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+}
+
+.boton--peligro {
+    color: var(--error);
+}
+
+.boton--peligro:hover {
+    border-color: var(--error);
+    color: var(--error);
+}
+
 .portada {
     max-width: 44rem;
     margin-bottom: clamp(2.5rem, 7vw, 4.5rem);
@@ -348,6 +363,12 @@ a {
     font-size: 0.875rem;
 }
 
+.formulario__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
 /* Listado de auditorías */
 .cabecera-pagina {
     display: flex;
@@ -398,8 +419,9 @@ a {
 .tabla thead th:nth-child(5) { width: 6rem; }
 .tabla thead th:nth-child(6) { width: 4.5rem; }
 .tabla thead th:nth-child(7) { width: 6rem; }
-.tabla thead th:nth-child(8) { width: 10rem; }
+.tabla thead th:nth-child(8) { width: 8.5rem; }
 .tabla thead th:nth-child(9) { width: 6.5rem; }
+.tabla thead th:nth-child(10) { width: 6.5rem; }
 
 .tabla th,
 .tabla td {
@@ -438,6 +460,18 @@ a {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
+}
+
+/* Editar y Eliminar: uno debajo del otro en la tabla, en fila en las tarjetas. */
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.375rem;
+}
+
+.acciones form {
+    margin: 0;
 }
 
 .notas summary {

@@ -60,5 +60,8 @@ $enrutador->get('/', [InicioController::class, 'index']);
 $enrutador->get('/auditorias', [AuditoriaController::class, 'listar']);
 $enrutador->get('/auditorias/nueva', [AuditoriaController::class, 'nueva']);
 $enrutador->post('/auditorias/nueva', [AuditoriaController::class, 'guardar']);
+$enrutador->get('/auditorias/editar', [AuditoriaController::class, 'editar']);
+$enrutador->post('/auditorias/editar', [AuditoriaController::class, 'actualizar']);
+$enrutador->post('/auditorias/eliminar', [AuditoriaController::class, 'eliminar']);
 
 $enrutador->despachar($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
