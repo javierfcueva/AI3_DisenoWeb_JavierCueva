@@ -62,7 +62,7 @@ El archivo `.env` contiene credenciales y Git lo ignora: nunca se sube al reposi
 
 El script `database/db_sistema_web.sql` crea la base `db_sistema_web` y sus tablas. Se puede ejecutar más de una vez sin error, porque usa `IF NOT EXISTS`.
 
-**Con phpMyAdmin:** abrir `http://localhost/phpmyadmin/`, entrar en la pestaña **Importar** sin seleccionar ninguna base, elegir el archivo `database/db_sistema_web.sql` y pulsar **Importar**. phpMyAdmin puede mostrar avisos "#1046 No database selected" junto a algunas sentencias. No afectan la importación: lo que confirma el resultado es el mensaje "Import has been successfully finished" al principio.
+**Con phpMyAdmin:** abrir `http://localhost/phpmyadmin/`, entrar en la pestaña **Importar** sin seleccionar ninguna base, elegir el archivo `database/db_sistema_web.sql` y pulsar **Importar**. phpMyAdmin puede mostrar avisos "#1046 No database selected" junto a algunas sentencias. No afectan la importación: lo que confirma el resultado es el mensaje "Import has been successfully finished" al principio de la página.
 
 **Desde la consola**, en la carpeta del proyecto:
 
@@ -78,12 +78,23 @@ El script `database/datos_prueba.sql` agrega 6 clientes y 12 auditorías fictici
 
 Se ejecuta después del paso anterior y solo carga los datos si las tablas `clientes` y `auditorias` están vacías. Si ya tienen registros, por ejemplo al ejecutarlo por segunda vez, no agrega nada, así que los datos nunca se repiten.
 
-**Con phpMyAdmin:** igual que en el paso anterior, con el archivo `database/datos_prueba.sql`.
+Al terminar, el script muestra una columna `resultado` con uno de estos mensajes:
+
+- `Datos cargados: 6 clientes y 12 auditorías.`
+- `No se cargó nada: las tablas ya tienen registros.`
+
+**Con phpMyAdmin:** igual que en el paso anterior, con el archivo `database/datos_prueba.sql`. El mensaje aparece al final de la página.
 
 **Desde la consola:**
 
 ```powershell
 C:\xampp\mysql\bin\mysql.exe --user=root --execute="source database/datos_prueba.sql"
+```
+
+Para volver a cargar los datos, por ejemplo si se registraron auditorías antes de este paso, hay que vaciar primero las dos tablas, empezando por `auditorias`. Se pierden todos los registros, y los nuevos continúan la numeración desde el último número usado:
+
+```powershell
+C:\xampp\mysql\bin\mysql.exe --user=root --execute="DELETE FROM db_sistema_web.auditorias; DELETE FROM db_sistema_web.clientes;"
 ```
 
 ### 6. Abrir el sistema
@@ -158,11 +169,14 @@ AI3_DisenoWeb_JavierCueva/
 - **CSRF:** registrar, editar y eliminar solo se aceptan por POST y con un token por sesión.
 - **Errores:** si la base de datos no responde, el usuario ve un mensaje genérico; el detalle queda en el log, sin mostrar credenciales ni mensajes del sistema.
 - **Archivos protegidos:** Apache bloquea el acceso directo a `.env`, `.git`, `app/`, `config/` y `database/`. Solo `public/` es accesible.
-- **Transacciones:** el alta o la edición de una auditoría con un cliente nuevo se guarda en una sola transacción. Al editar, la fila se bloquea para que dos peticiones simultáneas no se mezclen.
+- **Transacciones:** el alta o la edición de una auditoría con un cliente nuevo se guarda en una sola transacción: se guardan los dos o ninguno. Al editar, la fila queda bloqueada hasta guardar: si otra petición la elimina en ese momento, la edición responde con el error 404 y no deja un cliente sin auditorías.
 - **Cabeceras:** Content Security Policy sin scripts en línea, `X-Content-Type-Options` y cookie de sesión `HttpOnly` con `SameSite=Lax`.
 
 ## Limitaciones
 
+- No hay inicio de sesión: cualquiera que acceda al servidor puede registrar, editar y eliminar. Está pensado para uso local. Con la configuración predeterminada de XAMPP, Apache también acepta conexiones de otros equipos de la red, salvo que el firewall las bloquee.
+- La configuración de ejemplo usa el usuario `root` de XAMPP. Fuera de un entorno de pruebas conviene crear un usuario propio con solo los permisos `SELECT`, `INSERT`, `UPDATE` y `DELETE` sobre `db_sistema_web`, y escribir sus datos en `.env`.
+- Si dos personas editan la misma auditoría a la vez, se conservan los cambios de la última que guarda, sin aviso.
 - El listado no tiene paginación.
 - Los clientes se crean desde el formulario de auditorías, pero no se pueden editar ni eliminar desde la interfaz.
 - Sin JavaScript, la eliminación funciona, pero no pide confirmación.
