@@ -1,3 +1,13 @@
+<?php
+
+// Valor de una métrica con su calificación debajo. La calificación se escribe con palabras:
+// el color la refuerza, pero no es la única forma de distinguirla.
+$metrica = static fn (string $valor, string $calificacion): string =>
+    '<div>' . e($valor)
+    . '<span class="calificacion calificacion--' . e($calificacion) . '">'
+    . e(ClasificadorWebVitals::etiqueta($calificacion)) . '</span></div>';
+
+?>
 <section>
     <div class="cabecera-pagina">
         <h1>Auditorías</h1>
@@ -11,6 +21,51 @@
     <?php if ($auditorias === []): ?>
         <p class="vacio">Aún no hay auditorías registradas.</p>
     <?php else: ?>
+        <section class="resumen" aria-labelledby="titulo-resumen">
+            <h2 id="titulo-resumen">Resumen</h2>
+
+            <ul class="tarjetas tarjetas--resumen">
+                <li class="tarjeta">
+                    <h3>Aprobación</h3>
+                    <p class="tarjeta__valor"><?= e(numero($resumen['porcentaje_aprobacion'], 1)) ?> %</p>
+                    <p><?= e($resumen['aprobada']) ?> de <?= e($resumen['total']) ?> auditorías aprobadas.</p>
+                </li>
+                <li class="tarjeta">
+                    <h3>Clasificación</h3>
+                    <ul class="conteo">
+                        <?php foreach ([ClasificadorWebVitals::APROBADA, ClasificadorWebVitals::MEJORABLE, ClasificadorWebVitals::CRITICA] as $clave): ?>
+                            <li>
+                                <span class="estado estado--<?= e($clave) ?>"><?= e(ClasificadorWebVitals::etiqueta($clave)) ?></span>
+                                <span class="conteo__numero"><?= e($resumen[$clave]) ?></span>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </li>
+                <li class="tarjeta">
+                    <h3>LCP promedio</h3>
+                    <p class="tarjeta__valor"><?= e(numero($promedios['lcp_segundos'], 2)) ?> s</p>
+                    <p>Buena hasta 2,5&nbsp;s; deficiente por encima de 4&nbsp;s.</p>
+                </li>
+                <li class="tarjeta">
+                    <h3>INP promedio</h3>
+                    <p class="tarjeta__valor"><?= e(numero($promedios['inp_ms'])) ?> ms</p>
+                    <p>Buena hasta 200&nbsp;ms; deficiente por encima de 500&nbsp;ms.</p>
+                </li>
+                <li class="tarjeta">
+                    <h3>CLS promedio</h3>
+                    <p class="tarjeta__valor"><?= e(numero($promedios['cls'], 3)) ?></p>
+                    <p>Buena hasta 0,1; deficiente por encima de 0,25.</p>
+                </li>
+                <li class="tarjeta">
+                    <h3>Checklist promedio</h3>
+                    <p class="tarjeta__valor"><?= e(numero($promedios['checks_aprobados'], 1)) ?> de 17</p>
+                    <p>Se informa aparte: no cambia la clasificación.</p>
+                </li>
+            </ul>
+        </section>
+
+        <h2>Registros</h2>
+
         <div class="tabla-contenedor">
             <table class="tabla">
                 <caption class="solo-lectores">Auditorías registradas, de la más reciente a la más antigua</caption>
@@ -22,6 +77,7 @@
                         <th scope="col" class="tabla__numero">LCP</th>
                         <th scope="col" class="tabla__numero">INP</th>
                         <th scope="col" class="tabla__numero">CLS</th>
+                        <th scope="col">Resultado</th>
                         <th scope="col" class="tabla__numero">Checklist</th>
                         <th scope="col">Notas</th>
                         <th scope="col">Fecha</th>
@@ -30,6 +86,7 @@
                 </thead>
                 <tbody>
                     <?php foreach ($auditorias as $auditoria): ?>
+                        <?php $clasificacion = $auditoria['clasificacion']; ?>
                         <tr>
                             <th scope="row" data-etiqueta="N.º"><?= e($auditoria['id']) ?></th>
                             <td data-etiqueta="Cliente">
@@ -45,9 +102,20 @@
                                     <span class="tabla__url"><?= e($auditoria['url']) ?></span>
                                 <?php endif; ?>
                             </td>
-                            <td class="tabla__numero" data-etiqueta="LCP"><?= e(numero($auditoria['lcp_segundos'], 2)) ?> s</td>
-                            <td class="tabla__numero" data-etiqueta="INP"><?= e(numero($auditoria['inp_ms'])) ?> ms</td>
-                            <td class="tabla__numero" data-etiqueta="CLS"><?= e(numero($auditoria['cls'], 3)) ?></td>
+                            <td class="tabla__numero" data-etiqueta="LCP">
+                                <?= $metrica(numero($auditoria['lcp_segundos'], 2) . ' s', $clasificacion['metricas']['lcp_segundos']) ?>
+                            </td>
+                            <td class="tabla__numero" data-etiqueta="INP">
+                                <?= $metrica(numero($auditoria['inp_ms']) . ' ms', $clasificacion['metricas']['inp_ms']) ?>
+                            </td>
+                            <td class="tabla__numero" data-etiqueta="CLS">
+                                <?= $metrica(numero($auditoria['cls'], 3), $clasificacion['metricas']['cls']) ?>
+                            </td>
+                            <td data-etiqueta="Resultado">
+                                <div>
+                                    <span class="estado estado--<?= e($clasificacion['resultado']) ?>"><?= e(ClasificadorWebVitals::etiqueta($clasificacion['resultado'])) ?></span>
+                                </div>
+                            </td>
                             <td class="tabla__numero" data-etiqueta="Checklist"><?= e($auditoria['checks_aprobados']) ?> de 17</td>
                             <td data-etiqueta="Notas">
                                 <?php if ($auditoria['notas'] === null): ?>

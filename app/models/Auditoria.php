@@ -28,6 +28,23 @@ final class Auditoria
     }
 
     /**
+     * Calcula en la base de datos los promedios de las métricas y del checklist.
+     *
+     * @return array{lcp_segundos: ?string, inp_ms: ?string, cls: ?string, checks_aprobados: ?string}
+     */
+    public function promedios(): array
+    {
+        $consulta = $this->conexion->prepare(
+            'SELECT AVG(lcp_segundos) AS lcp_segundos, AVG(inp_ms) AS inp_ms,
+                    AVG(cls) AS cls, AVG(checks_aprobados) AS checks_aprobados
+             FROM auditorias'
+        );
+        $consulta->execute();
+
+        return $consulta->fetch();
+    }
+
+    /**
      * Devuelve una auditoría o null si no existe.
      *
      * @param bool $bloquear Dentro de una transacción, reserva la fila hasta el commit para que

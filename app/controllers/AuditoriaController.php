@@ -9,10 +9,20 @@ final class AuditoriaController
 
     public function listar(): void
     {
+        $modelo = new Auditoria(obtenerConexion());
+        $auditorias = $modelo->listar();
+
+        foreach ($auditorias as &$auditoria) {
+            $auditoria['clasificacion'] = ClasificadorWebVitals::clasificar($auditoria);
+        }
+        unset($auditoria);
+
         renderizar('auditorias/listado', [
             'titulo' => 'Auditorías',
             'seccion' => 'listado',
-            'auditorias' => (new Auditoria(obtenerConexion()))->listar(),
+            'auditorias' => $auditorias,
+            'resumen' => ClasificadorWebVitals::resumir(array_column($auditorias, 'clasificacion')),
+            'promedios' => $modelo->promedios(),
             'aviso' => tomarAviso(),
             'token' => tokenCsrf(),
         ]);
