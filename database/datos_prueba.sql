@@ -5,11 +5,15 @@
 -- (RFC 2606), que no pertenece a ninguna empresa real. Las métricas cubren las tres
 -- clasificaciones: Aprobada, Mejorable y Crítica.
 --
--- Solo se cargan si las dos tablas están vacías. Si ya tienen registros, por ejemplo
--- al ejecutar el script por segunda vez, no se agrega nada y nunca se repiten datos.
+-- Solo se cargan si las tablas están vacías. Si ya tienen registros, por ejemplo al
+-- ejecutar el script por segunda vez, no se agrega nada y nunca se repiten datos.
 -- La condición está en cada INSERT, así que no depende de que el programa que ejecuta
 -- el script se detenga ante un error. Cada fila va en su propio INSERT para que los
--- identificadores queden consecutivos, sin huecos.
+-- identificadores queden consecutivos, sin huecos. Al final, una consulta indica si
+-- los datos se cargaron.
+--
+-- Para volver a cargarlos, por ejemplo si una carga anterior quedó incompleta, hay que
+-- vaciar antes las dos tablas.
 
 SET NAMES utf8mb4;
 
@@ -17,8 +21,8 @@ USE db_sistema_web;
 
 START TRANSACTION;
 
-SET @cargar_datos = NOT EXISTS (SELECT 1 FROM clientes)
-                AND NOT EXISTS (SELECT 1 FROM auditorias);
+-- Basta con revisar clientes: por la clave foránea, no puede haber auditorías sin clientes.
+SET @cargar_datos = NOT EXISTS (SELECT 1 FROM clientes);
 
 -- Clientes
 INSERT INTO clientes (nombre, sector)
@@ -97,3 +101,10 @@ INSERT INTO auditorias (cliente_id, url, lcp_segundos, inp_ms, cls, checks_aprob
     FROM clientes WHERE nombre = 'Ferretería El Tornillo' AND @cargar_datos;
 
 COMMIT;
+
+SELECT IF(
+    @cargar_datos,
+    CONCAT('Datos cargados: ', (SELECT COUNT(*) FROM clientes), ' clientes y ',
+           (SELECT COUNT(*) FROM auditorias), ' auditorías.'),
+    'No se cargó nada: las tablas ya tienen registros.'
+) AS resultado;
